@@ -1,0 +1,64 @@
+#!/bin/sh
+#
+# Version cloud_2.1
+# source
+source /etc/profile
+# config
+project_home=/home/sanyuanse/cloud2_1_0/qccvas-backend
+#code_home=qccvas-biz-statistics,qccvas-biz-user,qccvas-biz-code,qccvas-base-log,qccvas-base-file,qccvas-base-message,qccvas-base-tenant,qccvas-biz-base,qccvas-biz-goods,qccvas-biz-order,qccvas-base-scheduled
+code_home=
+svn_home=/home/sanyuanse/cloud2_1_0/sh/svn_private
+# function
+function upload(){
+    ## mvn package
+    cd $project_home/$name/
+    private_name=`echo $name|cut -d "-" -f 3`
+    cp $private_name-private-starter/target/*.jar $svn_home/v2.1.4.10/
+    echo $private_name
+}
+
+function log_upload(){
+    ## mvn package
+    cd $project_home/$name/
+    private_name=`echo $name|cut -d "-" -f 3`
+    cp $private_name-private/target/*.jar $svn_home/v2.1.4.10/
+    echo $private_name
+}
+# updata backgound
+if [ -z $code_home ]
+then
+    echo No Package update
+else
+    for name in $(echo $code_home | sed "s/,/ /g")
+    do
+        if [ "$name" == qccvas-base-scheduled ]; then
+            upload 
+        elif [ "$name" == qccvas-biz-statistics ]; then
+            upload 
+        elif [ "$name" == qccvas-biz-user ]; then
+            upload 
+        elif [ "$name" == qccvas-biz-code ]; then
+            upload 
+        elif [ "$name" == qccvas-base-file ]; then
+            upload 
+        elif [ "$name" == qccvas-base-log ]; then
+            log_upload 
+        elif [ "$name" == qccvas-base-message ]; then
+            cp $project_home/qccvas-base-message/message/target/qccvas-base-message-2.1.0-SNAPSHOT.jar $svn_home/v2.1.4.10/
+        elif [ "$name" == qccvas-base-tenant ]; then
+            upload 
+        elif [ "$name" == qccvas-biz-base ]; then
+            upload 
+        elif [ "$name" == qccvas-biz-goods ]; then
+            upload 
+        elif [ "$name" == qccvas-biz-order ]; then
+            upload 
+        else 
+            echo no project
+        fi
+    done
+    # svn upload
+    cd $svn_home 
+    svn add v2.1.4.10
+    svn commit -m "private svn upload"
+fi
