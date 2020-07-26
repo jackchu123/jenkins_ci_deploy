@@ -13,8 +13,8 @@ class Api_test():
     def __init__(self, s):
         self.s = s
         self.s.verify = False
-        self.url = "https://fcloud.qccvas.com/gateway-nginx"
-        self.headers = {"TenantId": "suntech","Content-Type": "application/json"}
+        self.url = "https://XXX/gateway-nginx"
+        self.headers = {"TenantId": "XXX","Content-Type": "application/json"}
 
     def login(self,username,password):
         # data = json.dumps({"userName":username,"password": password,"tenantId":"manager"})
